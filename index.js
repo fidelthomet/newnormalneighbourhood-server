@@ -2,9 +2,14 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const restify = require('restify');
 const corsMiddleware = require('restify-cors-middleware2')
+
+const credentials = require('./credentials.json')
+var user = encodeURIComponent(credentials.user);
+var pass = encodeURIComponent(credentials.pass);
+var auth = '?authMechanism=%sDEFAULT';
  
 // DB options
-const url = 'mongodb://localhost:27017';
+const url = `mongodb://${user}@${pass}localhost:27017/${auth}`;
 const dbName = 'nnn';
 let db = null
  
