@@ -9,7 +9,7 @@ var pass = encodeURIComponent(credentials.pass);
 var auth = '?authMechanism=DEFAULT';
  
 // DB options
-const url = `mongodb://${user}@${pass}localhost:27017/${auth}`;
+const url = `mongodb://${user}:${pass}@localhost:27017/${auth}`;
 const dbName = 'nnn';
 let db = null
  
