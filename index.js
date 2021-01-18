@@ -39,7 +39,7 @@ MongoClient.connect(url, function(err, client) {
 });
 
 function getAll (req, res, next) {
-  db.collection('speculations').find({}).toArray((err, speculations) => {
+  db.collection('speculation').find({}).toArray((err, speculations) => {
     assert.strictEqual(err, null)
     res.charSet('utf-8')
     res.send({speculations})
