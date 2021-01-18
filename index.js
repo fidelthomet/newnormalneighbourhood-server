@@ -6,7 +6,7 @@ const corsMiddleware = require('restify-cors-middleware2')
 const credentials = require('./credentials.json')
 var user = encodeURIComponent(credentials.user);
 var pass = encodeURIComponent(credentials.pass);
-var auth = '?authMechanism=%sDEFAULT';
+var auth = '?authMechanism=DEFAULT';
  
 // DB options
 const url = `mongodb://${user}@${pass}localhost:27017/${auth}`;
