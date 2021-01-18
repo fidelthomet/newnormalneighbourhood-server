@@ -27,7 +27,10 @@ MongoClient.connect(url, function(err, client) {
   server.get('/api/all', getAll)
   server.post('/api/speculation', postSpeculation)
  
-  client.close();
+  // client.close();
+  server.listen(65434, () => {
+    console.log('%s listening at %s', server.name, server.url)
+  })
 });
 
 function getAll (req, res, next) {
