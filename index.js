@@ -29,8 +29,9 @@ MongoClient.connect(url, function(err, client) {
   console.log("Connected successfully to server");
   db = client.db(dbName);
   server.use(restify.plugins.bodyParser())
-  server.get('/api/all', getAll)
-  server.post('/api/speculation', postSpeculation)
+  server.get('/challenges', getChallenges)
+  server.get('/speculations', getSpeculations)
+  server.post('/speculation', postSpeculation)
  
   // client.close();
   server.listen(65434, () => {
@@ -38,11 +39,20 @@ MongoClient.connect(url, function(err, client) {
   })
 });
 
-function getAll (req, res, next) {
+function getChallenges (req, res, next) {
+  db.collection('challenge').find({ active: true }).toArray((err, challenges) => {
+    assert.strictEqual(err, null)
+    res.charSet('utf-8')
+    res.send(challenges)
+    next()
+  })
+}
+
+function getSpeculations (req, res, next) {
   db.collection('speculation').find({}).toArray((err, speculations) => {
     assert.strictEqual(err, null)
     res.charSet('utf-8')
-    res.send({speculations})
+    res.send(speculations)
     next()
   })
 }
