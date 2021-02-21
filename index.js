@@ -86,7 +86,6 @@ function postSpeculation (req, res, next) {
     date: new Date(),
     // photo: data.photo,
     sketch: data.sketch,
-    sketchDimensions: data.sketchDimensions,
     coords: [ data.coords[0], data.coords[1] ],
     title: data.title,
     description: data.description,
