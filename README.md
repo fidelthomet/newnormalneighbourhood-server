@@ -19,6 +19,7 @@ db.specualtion.insertMany([{
 ```
 db.challenge.insertMany([{
   title: "Information Infrastructure Breakdown",
+  active: true,
   region: "Berlin",
   bounds: [],
   img: "a/information-infrastructure-breakdown.jpg",
