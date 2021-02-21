@@ -1,12 +1,16 @@
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const restify = require('restify');
 const corsMiddleware = require('restify-cors-middleware2')
+const fs = require('fs')
 
 const credentials = require('./credentials.json')
 var user = encodeURIComponent(credentials.user);
 var pass = encodeURIComponent(credentials.pass);
 var auth = '?authMechanism=DEFAULT';
+
+const filePath = '/home/f/www/files.nnn.ft0.ch/s'
  
 // DB options
 const url = `mongodb://${user}:${pass}@localhost:27017/${auth}`;
@@ -31,6 +35,7 @@ MongoClient.connect(url, function(err, client) {
   server.use(restify.plugins.bodyParser())
   server.get('/challenges', getChallenges)
   server.get('/speculations', getSpeculations)
+  server.get('/speculation/:id', getSpeculation)
   server.post('/speculation', postSpeculation)
  
   // client.close();
@@ -49,7 +54,16 @@ function getChallenges (req, res, next) {
 }
 
 function getSpeculations (req, res, next) {
-  db.collection('speculation').find({}).toArray((err, speculations) => {
+  db.collection('speculation').find({}).project({scenario: 1}).sort({ date: -1 }).toArray((err, speculations) => {
+    assert.strictEqual(err, null)
+    res.charSet('utf-8')
+    res.send(speculations)
+    next()
+  })
+}
+
+function getSpeculation (req, res, next) {
+  db.collection('speculation').find({_id: ObjectID(req.params.id)}).toArray((err, speculations) => {
     assert.strictEqual(err, null)
     res.charSet('utf-8')
     res.send(speculations)
@@ -68,16 +82,23 @@ function postSpeculation (req, res, next) {
 
   // insert
   db.collection('speculation').insert({
-    type: data.type,
+    scenario: data.scenario,
     date: new Date(),
-    photo: data.photo,
+    // photo: data.photo,
     sketch: data.sketch,
+    sketchDimensions: data.sketchDimensions,
     coords: [ data.coords[0], data.coords[1] ],
     title: data.title,
     description: data.description,
   }, (err, result) => {
+    // console.log(result)
+    const id = result.insertedIds[0]
     assert.strictEqual(err, null)
-    res.send(200)
-    next()
+    const base64Data = data.photo.replace(/^data:image\/jpeg;base64,/, '');
+    fs.writeFile(`${filePath}/${id}.jpg`, base64Data, 'base64', function(err) {
+      console.log(err);
+      res.send({id})
+      next()
+    })
   })
 }
