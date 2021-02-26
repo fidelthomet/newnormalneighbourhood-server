@@ -27,6 +27,7 @@ const cors = corsMiddleware({
 })
 server.pre(cors.preflight)
 server.use(cors.actual)
+server.use(restify.plugins.gzipResponse())
 
 MongoClient.connect(url, function(err, client) {
   assert.strictEqual(null, err);
